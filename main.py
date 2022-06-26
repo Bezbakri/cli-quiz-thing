@@ -42,7 +42,7 @@ def few_trivia_questions(number):
         if choice == question_and_answer[1]:
             score+=1
             print(f"Correct! Current score is {score}")
-        elif choice == question_and_answer[1]:
+        elif choice != question_and_answer[1]:
             print(f"Oops! Wrong answer. The right answer is {question_and_answer[1]}. Current score is {score}")
     
     print_banner("LIGHT_SEA_GREEN", "Final score")
