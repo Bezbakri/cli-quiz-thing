@@ -72,7 +72,49 @@ def few_trivia_questions(number):
     elif choice == "No":
         print("Okay. Have a nice day!")
 
+def all_trivia_questions():
+    score = 0
+    user_answers_list = []
+    for question_and_answer in all_questions[1:]:
+        choices = []
+        for i in range(3):
+            choices.append(all_questions[random.randint(1, len(all_questions)-1)][1])
+        choices.insert(random.randint(0,3), question_and_answer[1]) 
+        choice = questionary.select(question_and_answer[0], choices = choices).ask()
+        user_answers_list.append(choice)
+        if choice == question_and_answer[1]:
+            score+=1
+            print(f"Correct! Current score is {score}")
+        elif choice != question_and_answer[1]:
+            print(f"Oops! Wrong answer. The right answer is {question_and_answer[1]}. Current score is {score}")
     
+    print_banner("LIGHT_SEA_GREEN", "Final score")
+    print(f"out of {len(all_questions)-1} is:")
+    percentage = score/(len(all_questions)-1)
+    if percentage >= 0.7:
+        print_banner("GREEN", str(score))
+    elif percentage >= 0.4:
+        print_banner("YELLOW", str(score))
+    else:
+        print_banner("RED", str(score))
+    choice = questionary.select(
+    "Would you like a copy of your responses emailed to you?",
+    choices=[
+        "Yes",
+        "No"
+    ]).ask()
+    if choice == "Yes":
+        receiver = input("Enter your email ID: ")
+        user = receiver.partition("@")[0]
+        content = f"Hello {user}. Today, you scored {score} out of {len(all_questions)-1} on my trivia quiz.\nHere's a list of the questions, thier correct answers and your responses:\n\n"
+        for index, question_and_answer in enumerate(all_questions[1:]):
+            content += f"\nQuestion #{index+1}:\t{question_and_answer[0]}\n"
+            content += f"Correct answer = {question_and_answer[1]}\n"
+            content += f"Your answer = {user_answers_list[index]}\n"
+        send_email(receiver, content)
+    elif choice == "No":
+        print("Okay. Have a nice day!")
+
     
 def send_email(receiver, content):
     """Create and send an email message
@@ -126,7 +168,7 @@ class quiz(cli.Application):
         elif choice == '15':
             few_trivia_questions(15)
         elif choice == "All of the saved ones":
-            few_trivia_questions(len(all_questions))
+            all_trivia_questions()
 
 
 
