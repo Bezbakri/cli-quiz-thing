@@ -4,12 +4,17 @@ import questionary
 import csv
 import random
 from datetime import datetime
+import os
+from dotenv import load_dotenv
 
 import base64
 from email.message import EmailMessage
 
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+
+load_dotenv()
+EMAIL=os.getenv("EMAIL")
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.compose']
 creds = Credentials.from_authorized_user_file('token.json', SCOPES)
@@ -133,7 +138,7 @@ def send_email(receiver, content):
         message.set_content(content)
 
         message['To'] = receiver
-        message['From'] = 'bezbakri@gmail.com'
+        message['From'] = EMAIL
         message['Subject'] = f"Trivia quiz results for quiz taken on {datetime.today().strftime('%Y-%m-%d')} at {datetime.today().strftime('%H:%M')}"
 
         # encoded message
